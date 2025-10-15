@@ -256,9 +256,9 @@ def objective(trial, X_train, y_train, results=None):
         results = []
     # Define hyperparameter search space
     params = {
-        'hidden_dim': trial.suggest_int('hidden_dim', 32, 256, step=32),
+        'hidden_dim': trial.suggest_int('hidden_dim', 32, 512, step=32),
         'dropout': trial.suggest_float('dropout', 0.0, 0.5, step=0.1),
-        'learning_rate': trial.suggest_float('learning_rate', 1e-4, 1e-2, log=True),
+        'learning_rate': trial.suggest_float('learning_rate', 1e-5, 1e-2, log=True),
         'batch_size': trial.suggest_categorical('batch_size', [16, 32, 64])
     }
 
@@ -378,7 +378,8 @@ def train_optuna(X_train, y_train, transformation, n_trials=10):
         return mean_score
 
     # Run Optuna study
-    study = optuna.create_study(direction='maximize')
+    study = optuna.create_study(direction='maximize', sampler=optuna.samplers.TPESampler(seed=42))
+    
     study.optimize(optuna_func, n_trials)
 
 
